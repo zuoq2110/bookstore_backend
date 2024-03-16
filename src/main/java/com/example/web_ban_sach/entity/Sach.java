@@ -38,6 +38,12 @@ public class Sach {
     @Column(name = "trung_binh_xep_hang")
     private Double trungBinhXepHang;
 
+    @Column(name="so_luong_da_ban")
+    private int soLuongDaBan;
+
+    @Column(name = "giam_gia")
+    private int giamGia;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
@@ -63,4 +69,7 @@ public class Sach {
             CascadeType.ALL
     })
     List<SachYeuThich> danhSachSachYeuThich;
+
+    @OneToMany(mappedBy = "sach", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<GioHang> danhSachGioHang;
 }

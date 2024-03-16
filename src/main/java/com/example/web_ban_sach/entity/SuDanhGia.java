@@ -3,6 +3,8 @@ package com.example.web_ban_sach.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 @Entity
 @Table(name = "su_danh_gia")
@@ -17,6 +19,9 @@ public class SuDanhGia {
 
     @Column(name = "nhan_xet")
     private String nhanXet;
+
+    @Column(name = "timestamp")
+    private Timestamp timestamp;
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,

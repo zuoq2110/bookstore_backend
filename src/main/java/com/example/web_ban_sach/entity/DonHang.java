@@ -18,11 +18,14 @@ public class DonHang {
     @Column(name = "ngay_tao")
     private Date ngayTao;
 
-    @Column(name = "dia_chi_mua_hang")
-    private String diaChiMuaHang;
+    @Column(name = "dia_chi_giao_hang")
+    private String diaChiGiaoHang;
 
-    @Column(name = "dia_chi_nhan_hang")
-    private String diaChiNhanHang;
+    @Column(name = "tinh_trang_don_hang")
+    private String tinhTrangDonHang;
+
+    @Column(name = "ghi_chu")
+    private String ghiChu;
 
     @Column(name = "tong_tien_san_pham")
     private double tongTienSanPham;
@@ -35,6 +38,12 @@ public class DonHang {
 
     @Column(name = "tong_tien")
     private double tongTien;
+
+    @Column(name = "so_dien_thoai")
+    private String soDienThoai;
+
+    @Column(name = "ho_va_ten")
+    private String hoVaTen;
 
     @OneToMany(mappedBy = "donHang", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ChiTietDonHang> danhSachChiTietDonHang;

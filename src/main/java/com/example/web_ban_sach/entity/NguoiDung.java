@@ -3,6 +3,7 @@ package com.example.web_ban_sach.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Date;
 import java.util.List;
 
 @Data
@@ -40,14 +41,23 @@ public class NguoiDung {
 
     @Column(name="dia_chi_giao_hang")
     private String diaChiGiaoHang;
+    @Column(name="ngay_sinh")
+    private Date ngaySinh;
+    @Column(name = "da_kich_hoat", columnDefinition = "default false")
+    private boolean daKichHoat;
+    @Column(name = "ma_kich_hoat")
+    private String maKichHoat;
+    @Column(name = "avatar", columnDefinition = "LONGTEXT")
+    @Lob
+    private String avatar;
 
-    @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<SuDanhGia> danhSachSuDanhGia;
 
     @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SachYeuThich> danhSachSachYeuThich;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
@@ -61,4 +71,7 @@ public class NguoiDung {
             CascadeType.DETACH, CascadeType.REFRESH
     })
     private List<DonHang> danhSachDonhang;
+
+    @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<GioHang> danhSachGioHang;
 }
