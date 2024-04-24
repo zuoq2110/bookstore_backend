@@ -2,6 +2,7 @@ package com.example.web_ban_sach.security;
 
 import com.example.web_ban_sach.Filter.JwtFiler;
 import com.example.web_ban_sach.Service.UserService;
+import com.example.web_ban_sach.util.UserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +29,9 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
     @Bean
-    @Autowired
-    public DaoAuthenticationProvider authenticationProvider(UserService userService){
+    public DaoAuthenticationProvider authenticationProvider(UserSecurityService userSecurityService){
         DaoAuthenticationProvider dap = new DaoAuthenticationProvider();
-        dap.setUserDetailsService(userService);
+        dap.setUserDetailsService(userSecurityService);
         dap.setPasswordEncoder(passwordEncoder());
         return dap;
     }

@@ -26,6 +26,17 @@ public class NguoiDungController {
 
     }
 
+    @PutMapping("/doi-mat-khau")
+    public ResponseEntity<?> doiMatKhau(@RequestBody JsonNode jsonNode){
+        try{
+             return userService.doiMatKhau(jsonNode);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
     @PutMapping("/doi-avatar")
     public ResponseEntity<?> changeAvatar(@RequestBody JsonNode jsonNode){
        try {

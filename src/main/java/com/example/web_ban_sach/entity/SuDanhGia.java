@@ -35,4 +35,8 @@ public class SuDanhGia {
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "ma_nguoi_dung", nullable = false)
     private NguoiDung nguoiDung;
+
+    @OneToOne( cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "ma_chi_tiet_don_hang")
+    private ChiTietDonHang chiTietDonHang;
 }

@@ -18,8 +18,9 @@ public class ChiTietDonHang {
 
     @Column(name="gia_ban")
     private double giaBan;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {
+    @Column(name = "is_review")
+    private boolean isReview;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })

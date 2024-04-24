@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService extends UserDetailsService {
-    public NguoiDung findByUsername(String tenDangNhap);
+public interface UserService  {
 
     public ResponseEntity<?> updateProfile(JsonNode jsonNode);
 
     public ResponseEntity<?> changeAvatar(JsonNode jsonNode);
+
+    public ResponseEntity<?> doiMatKhau(JsonNode jsonNode);
 }

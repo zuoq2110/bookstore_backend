@@ -70,7 +70,7 @@ public class NguoiDung {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
-    private List<DonHang> danhSachDonhang;
+    private List<DonHang> danhSachDonHang;
 
     @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GioHang> danhSachGioHang;

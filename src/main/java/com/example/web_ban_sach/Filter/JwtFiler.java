@@ -2,6 +2,7 @@ package com.example.web_ban_sach.Filter;
 
 import com.example.web_ban_sach.Service.JWTService;
 import com.example.web_ban_sach.Service.UserService;
+import com.example.web_ban_sach.util.UserSecurityService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class JwtFiler extends OncePerRequestFilter {
     @Autowired
     private JWTService jwtService;
     @Autowired
-    private UserService userService;
+    private UserSecurityService userSecurityService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,7 +33,7 @@ public class JwtFiler extends OncePerRequestFilter {
             username = jwtService.extractUsername(token);
         }
         if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails userDetails = userService.loadUserByUsername(username);
+            UserDetails userDetails = userSecurityService.loadUserByUsername(username);
             if (jwtService.validateToken(token, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
                         null, userDetails.getAuthorities());

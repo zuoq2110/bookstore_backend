@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @RepositoryRestResource(path = "hinh-thuc-thanh-toan")
 public interface HinhThucThanhToanRepository extends JpaRepository<HinhThucThanhToan, Integer> {
-//    public HinhThucThanhToan findByMaHinhThucThanhToan(int maHinhThucThanhToan);
+    public HinhThucThanhToan findByMaHinhThucThanhToan(int maHinhThucThanhToan);
 }

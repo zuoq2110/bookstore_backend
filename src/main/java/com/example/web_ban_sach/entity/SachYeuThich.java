@@ -25,4 +25,7 @@ public class SachYeuThich {
     })
     @JoinColumn(name = "ma_sach", nullable = false)
     private Sach sach;
+    @OneToOne( cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "ma_chi_tiet_don_hang")
+    private ChiTietDonHang chiTietDonHang;
 }

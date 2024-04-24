@@ -16,21 +16,29 @@ public class Endpoints {
             "/gio-hang/**",
             "/su-danh-gia/**",
             "/don-hang/**",
+            "sach-yeu-thich/**",
+            "/sach-yeu-thich/lay-sach/**",
+            "/chi-tiet-don-hang/**",
     };
     public static final String[] PUBLIC_POST_ENDPOINTS = {
             "/tai-khoan/dang-ky",
             "/tai-khoan/dang-nhap",
             "/gio-hang/them",
             "/don-hang/**",
+            "/sach-yeu-thich/**",
+            "/su-danh-gia/**",
 
     };
     public static final String[] PUBLIC_PUT_ENDPOINTS = {
             "/gio-hang/**",
-            "nguoi-dung/**"
+            "nguoi-dung/**",
+            "don-hang/**",
+            "/su-danh-gia/**",
 
     };
     public static final String[] PUBLIC_DELETE_ENDPOINTS = {
-            "/gio-hang/**"
+            "/gio-hang/**",
+            "/sach-yeu-thich/**",
 
     };
 

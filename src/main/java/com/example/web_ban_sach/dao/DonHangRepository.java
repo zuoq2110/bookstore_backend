@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @RepositoryRestResource(path = "don-hang")
 public interface DonHangRepository extends JpaRepository<DonHang, Integer> {
+    public DonHang findByMaDonHang(int maDonHang);
 }

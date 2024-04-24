@@ -2,6 +2,7 @@ package com.example.web_ban_sach.Service;
 
 import com.example.web_ban_sach.entity.NguoiDung;
 import com.example.web_ban_sach.entity.Quyen;
+import com.example.web_ban_sach.util.UserSecurityService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,12 +23,12 @@ import java.util.function.Function;
 @Component
 public class JWTService {
     @Autowired
-    private UserService userService;
+    private UserSecurityService userSecurityService;
     private static final String SECRET = "Duong12345ABCJDFKFO213HANDFKKDLKKKPELAODIIDID12031";
 
     public String generateToken(String tenDangNhap){
         Map<String, Object> claims = new HashMap<>();
-        NguoiDung nguoiDung = userService.findByUsername(tenDangNhap);
+        NguoiDung nguoiDung = userSecurityService.findByTenDangNhap(tenDangNhap);
         boolean isAdmin = false;
         boolean isStaff = false;
         boolean isUser = false;

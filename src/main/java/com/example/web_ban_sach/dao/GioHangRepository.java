@@ -9,5 +9,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface GioHangRepository extends JpaRepository<GioHang, Integer> {
 public GioHang findByMaGioHang(int maGioHang);
 
-
+public void deleteGioHangByNguoiDung(NguoiDung nguoiDung);
 }

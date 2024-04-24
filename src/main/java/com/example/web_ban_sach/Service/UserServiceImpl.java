@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService{
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private NguoiDungRepository nguoiDungRepository;
    @Autowired
@@ -36,11 +39,24 @@ public class UserServiceImpl implements UserService{
     private String formatStringByJson(String json) {
         return json.replaceAll("\"", "");
     }
-    @Override
-    public NguoiDung findByUsername(String tenDangNhap) {
-        return nguoiDungRepository.findByTenDangNhap(tenDangNhap);
-    }
 
+    @Override
+    public ResponseEntity<?> doiMatKhau(JsonNode jsonNode){
+        try {
+            int maNguoiDung = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("maNguoiDung"))));
+            String matKhauMoi = formatStringByJson(String.valueOf(jsonNode.get("matKhauMoi")));
+            String matKhauCu = formatStringByJson(String.valueOf(jsonNode.get("matKhauCu")));
+            NguoiDung nguoiDung = nguoiDungRepository.findByMaNguoiDung(maNguoiDung);
+
+                nguoiDung.setMatKhau(bCryptPasswordEncoder.encode(matKhauMoi));
+                nguoiDungRepository.save(nguoiDung);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+    }
     @Override
     public ResponseEntity<?> updateProfile(JsonNode jsonNode) {
        try {
@@ -82,16 +98,5 @@ public class UserServiceImpl implements UserService{
         return ResponseEntity.ok().build();
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        NguoiDung nguoiDung = findByUsername(username);
-        if(nguoiDung==null){
-            throw new UsernameNotFoundException("Tài khoản không tồn tại");
-        }
-        return new User(nguoiDung.getTenDangNhap(), nguoiDung.getMatKhau(),rolesToAuthorities(nguoiDung.getDanhSachQuyen()) ) ;
-    }
 
-    private Collection<? extends GrantedAuthority> rolesToAuthorities(Collection<Quyen> quyens){
-        return quyens.stream().map(quyen -> new SimpleGrantedAuthority(quyen.getTenQuyen())).collect(Collectors.toList());
-    }
 }
