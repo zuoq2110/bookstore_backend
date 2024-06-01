@@ -1,20 +1,23 @@
 package com.example.web_ban_sach.controller;
 
 import com.example.web_ban_sach.Service.UserService;
+import com.example.web_ban_sach.dao.QuyenRepository;
+import com.example.web_ban_sach.entity.NguoiDung;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/nguoi-dung")
 public class NguoiDungController {
+
     @Autowired
     private UserService userService;
+
+
     @PutMapping("/update-profile")
     public ResponseEntity<?> updateProfile(@RequestBody JsonNode jsonNode){
         try {
@@ -25,6 +28,8 @@ public class NguoiDungController {
         }
 
     }
+
+
 
     @PutMapping("/doi-mat-khau")
     public ResponseEntity<?> doiMatKhau(@RequestBody JsonNode jsonNode){
@@ -45,5 +50,30 @@ public class NguoiDungController {
            e.printStackTrace();
            return ResponseEntity.badRequest().build();
        }
+    }
+
+    @PostMapping("/them")
+    public ResponseEntity<?> save(@RequestBody JsonNode jsonNode){
+        try {
+            return userService.save(jsonNode, "add");
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/cap-nhat")
+    public ResponseEntity<?> update(@RequestBody JsonNode jsonNode){
+        try {
+            return userService.save(jsonNode, "update");
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/xoa/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id){
+        return userService.delete(id);
     }
 }

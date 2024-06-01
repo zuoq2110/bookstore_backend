@@ -14,5 +14,7 @@ public interface SachRepository extends JpaRepository<Sach, Integer> {
     public Page<Sach> findByDanhSachTheLoai_MaTheLoai(@RequestParam("maTheLoai") int maTheLoai, Pageable pageable);
     public Page<Sach> findByTenSachContainingAndDanhSachTheLoai_MaTheLoai(@RequestParam("tenSach") String tenSach, @RequestParam("maTheLoai") int maTheLoai, Pageable pageable);
 public Sach findByMaSach(int maSach);
+
+    public long countBy();
 }
 

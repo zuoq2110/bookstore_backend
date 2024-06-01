@@ -19,6 +19,9 @@ public class Endpoints {
             "sach-yeu-thich/**",
             "/sach-yeu-thich/lay-sach/**",
             "/chi-tiet-don-hang/**",
+            "/quyen/**",
+            "/the-loai",
+            "/the-loai/**"
     };
     public static final String[] PUBLIC_POST_ENDPOINTS = {
             "/tai-khoan/dang-ky",
@@ -27,6 +30,7 @@ public class Endpoints {
             "/don-hang/**",
             "/sach-yeu-thich/**",
             "/su-danh-gia/**",
+            "sach/them-sach/**",
 
     };
     public static final String[] PUBLIC_PUT_ENDPOINTS = {
@@ -40,14 +44,28 @@ public class Endpoints {
             "/gio-hang/**",
             "/sach-yeu-thich/**",
 
+
     };
 
     public static final String[] ADMIN_GET_ENDPOINTS = {
             "/nguoi-dung",
             "/nguoi-dung/**",
+            "/the-loai/**",
+            "/**",
     };
     public static final String[] ADMIN_POST_ENDPOINTS = {
             "/sach",
-            "/sach/**"
+            "/sach/**",
+            "/sach/them-sach/**",
+            "/**",
+            "/the-loai",
+    };
+    public static final String[] ADMIN_PUT_ENDPOINTS = {
+            "/sach/cap-nhat/**",
+            "/**",
+    };
+    public static final String[] ADMIN_DELETE_ENDPOINTS = {
+            "/sach/**",
+            "/**",
     };
 }

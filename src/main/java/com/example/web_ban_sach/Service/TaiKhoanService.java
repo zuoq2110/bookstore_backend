@@ -1,7 +1,9 @@
 package com.example.web_ban_sach.Service;
 
 import com.example.web_ban_sach.dao.NguoiDungRepository;
+import com.example.web_ban_sach.dao.QuyenRepository;
 import com.example.web_ban_sach.entity.NguoiDung;
+import com.example.web_ban_sach.entity.Quyen;
 import com.example.web_ban_sach.entity.ThongBao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,6 +23,8 @@ public class TaiKhoanService {
     private NguoiDungRepository nguoiDungRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private QuyenRepository quyenRepository;
 
     public ResponseEntity<?> dangKyNguoiDung( NguoiDung nguoiDung){
         if(nguoiDungRepository.existsByTenDangNhap(nguoiDung.getTenDangNhap())){
@@ -31,6 +37,9 @@ public class TaiKhoanService {
         nguoiDung.setMatKhau(encryptPassword);
         nguoiDung.setMaKichHoat(taoMaKichHoat());
         nguoiDung.setDaKichHoat(false);
+        List<Quyen> roleList = new ArrayList<>();
+        roleList.add(quyenRepository.findByTenQuyen("CUSTOMER"));
+        nguoiDung.setDanhSachQuyen(roleList);
         NguoiDung nguoiDung_daDangKy = nguoiDungRepository.save(nguoiDung);
 
         //Gửi email cho ng dùng

@@ -12,4 +12,8 @@ public interface UserService  {
     public ResponseEntity<?> changeAvatar(JsonNode jsonNode);
 
     public ResponseEntity<?> doiMatKhau(JsonNode jsonNode);
+
+    public ResponseEntity<?> save(JsonNode jsonNode, String option);
+    public ResponseEntity<?> delete(int id);
+
 }

@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface SuDanhGiaRepository extends JpaRepository<SuDanhGia, Long> {
     public SuDanhGia findByChiTietDonHang(ChiTietDonHang chiTietDonHang);
     public SuDanhGia findByMaDanhGia(long maDanhGia);
+
+    public long countBy();
 }

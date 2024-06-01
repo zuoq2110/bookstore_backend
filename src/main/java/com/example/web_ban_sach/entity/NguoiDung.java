@@ -43,7 +43,7 @@ public class NguoiDung {
     private String diaChiGiaoHang;
     @Column(name="ngay_sinh")
     private Date ngaySinh;
-    @Column(name = "da_kich_hoat", columnDefinition = "default false")
+    @Column(name = "da_kich_hoat")
     private boolean daKichHoat;
     @Column(name = "ma_kich_hoat")
     private String maKichHoat;

@@ -50,6 +50,7 @@ public class JWTService {
         claims.put("isAdmin", isAdmin);
         claims.put("isStaff", isStaff);
         claims.put("isUser", isUser);
+        claims.put("enabled", nguoiDung.isDaKichHoat());
         return createToken(claims, tenDangNhap);
     }
 
