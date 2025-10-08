@@ -21,7 +21,11 @@ public class Endpoints {
             "/chi-tiet-don-hang/**",
             "/quyen/**",
             "/the-loai",
-            "/the-loai/**"
+            "/the-loai/**",
+            // Seller Approval & Notifications
+            "/seller-requests/**",
+            "/notifications/stream/**",
+            "/notifications/**"
     };
     public static final String[] PUBLIC_POST_ENDPOINTS = {
             "/tai-khoan/dang-ky",
@@ -31,6 +35,11 @@ public class Endpoints {
             "/sach-yeu-thich/**",
             "/su-danh-gia/**",
             "sach/them-sach/**",
+            "/nguoi-dung/register-seller",
+            // Seller Approval
+            "/seller-requests/submit",
+            "/seller-requests/*/approve",
+            "/seller-requests/*/reject"
 
     };
     public static final String[] PUBLIC_PUT_ENDPOINTS = {
@@ -38,6 +47,9 @@ public class Endpoints {
             "nguoi-dung/**",
             "don-hang/**",
             "/su-danh-gia/**",
+            // Notifications
+            "/notifications/*/mark-read",
+            "/notifications/mark-all-read"
 
     };
     public static final String[] PUBLIC_DELETE_ENDPOINTS = {
@@ -45,6 +57,28 @@ public class Endpoints {
             "/sach-yeu-thich/**",
 
 
+    };
+    
+    // Seller endpoints - Yêu cầu isSeller = true
+    public static final String[] SELLER_GET_ENDPOINTS = {
+            "/seller/dashboard/**",
+            "/seller/books/**",
+            "/seller/books",
+            "/seller/statistics/**",
+            "/seller/statistics"
+    };
+    
+    public static final String[] SELLER_POST_ENDPOINTS = {
+            "/seller/books/**",
+            "/seller/books"
+    };
+    
+    public static final String[] SELLER_PUT_ENDPOINTS = {
+            "/seller/books/**"
+    };
+    
+    public static final String[] SELLER_DELETE_ENDPOINTS = {
+            "/seller/books/**"
     };
 
     public static final String[] ADMIN_GET_ENDPOINTS = {

@@ -1,8 +1,11 @@
 package com.example.web_ban_sach.controller;
 
+import com.example.web_ban_sach.Service.SellerService;
 import com.example.web_ban_sach.Service.UserService;
 import com.example.web_ban_sach.dao.QuyenRepository;
 import com.example.web_ban_sach.entity.NguoiDung;
+import com.example.web_ban_sach.entity.SellerRegisterRequest;
+import com.example.web_ban_sach.entity.ThongBao;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,8 @@ public class NguoiDungController {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private SellerService sellerService;
 
     @PutMapping("/update-profile")
     public ResponseEntity<?> updateProfile(@RequestBody JsonNode jsonNode){
@@ -75,5 +79,19 @@ public class NguoiDungController {
     @DeleteMapping("/xoa/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         return userService.delete(id);
+    }
+
+    /**
+     * Đăng ký seller
+     * POST /nguoi-dung/register-seller
+     */
+    @PostMapping("/register-seller")
+    public ResponseEntity<?> registerSeller(@RequestBody SellerRegisterRequest request) {
+        try {
+            return sellerService.registerSeller(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new ThongBao("Lỗi: " + e.getMessage()));
+        }
     }
 }

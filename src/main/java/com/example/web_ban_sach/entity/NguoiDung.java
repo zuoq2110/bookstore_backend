@@ -1,5 +1,7 @@
 package com.example.web_ban_sach.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name="nguoi_dung")
+@JsonIgnoreProperties({"danhSachDonHang", "danhSachGioHang", "matKhau"})
 public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +30,8 @@ public class NguoiDung {
     @Column(name="mat_khau")
     private String matKhau;
 
-    @Column(name="gioi_tinh")
-    private char gioiTinh;
+    @Column(name="gioi_tinh", length = 10)
+    private String gioiTinh;
 
     @Column(name="email")
     private String email;
@@ -50,6 +53,30 @@ public class NguoiDung {
     @Column(name = "avatar", columnDefinition = "LONGTEXT")
     @Lob
     private String avatar;
+
+    @Column(name = "is_seller")
+    @JsonProperty("isSeller")
+    private boolean isSeller = false;
+
+    @Column(name = "ten_gian_hang")
+    private String tenGianHang;
+
+    @Column(name = "mo_ta_gian_hang", columnDefinition = "TEXT")
+    private String moTaGianHang;
+    
+    // === THÔNG TIN CỬA HÀNG BỔ SUNG ===
+    
+    @Column(name = "dia_chi_gian_hang", length = 500)
+    private String diaChiGianHang;
+    
+    @Column(name = "vi_do_gian_hang")
+    private Double viDoGianHang;
+    
+    @Column(name = "kinh_do_gian_hang")
+    private Double kinhDoGianHang;
+    
+    @Column(name = "so_dien_thoai_gian_hang", length = 15)
+    private String soDienThoaiGianHang;
 
     @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<SuDanhGia> danhSachSuDanhGia;

@@ -98,6 +98,33 @@ public SuDanhGiaServiceImpl(ObjectMapper objectMapper){
         return ResponseEntity.ok().build();
     }
 
+//    @Override
+//    public ResponseEntity<?> get(JsonNode jsonNode) {
+//        try {
+//            int maDonHang = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("maDonHang"))));
+//            int maSach = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("maSach"))));
+//
+//            DonHang donHang = donHangRepository.findByMaDonHang(maDonHang);
+//            Sach sach = sachRepository.findByMaSach(maSach);
+//            List<ChiTietDonHang> chiTietDonHangList = chiTietDonHangRepository.findChiTietDonHangByDonHang(donHang);
+//            for(ChiTietDonHang c : chiTietDonHangList){
+//                if(c.getSach().getMaSach()== maSach){
+//                    SuDanhGia suDanhGia = suDanhGiaRepository.findByChiTietDonHang(c);
+//                    SuDanhGia suDanhGiaResponse = new SuDanhGia();
+//                    suDanhGiaResponse.setMaDanhGia(suDanhGia.getMaDanhGia());
+//                    suDanhGiaResponse.setTimestamp(suDanhGia.getTimestamp());
+//                    suDanhGiaResponse.setNhanXet(suDanhGia.getNhanXet());
+//                    suDanhGiaResponse.setDiemXepHang(suDanhGia.getDiemXepHang());
+//                    return ResponseEntity.status(HttpStatus.OK).body(suDanhGiaResponse);
+//                }
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return ResponseEntity.badRequest().build();
+//        }
+//        return null;
+//    }
+
     @Override
     public ResponseEntity<?> get(JsonNode jsonNode) {
         try {
@@ -105,23 +132,33 @@ public SuDanhGiaServiceImpl(ObjectMapper objectMapper){
             int maSach = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("maSach"))));
 
             DonHang donHang = donHangRepository.findByMaDonHang(maDonHang);
+            if (donHang == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Đơn hàng không tồn tại");
+            }
+
             Sach sach = sachRepository.findByMaSach(maSach);
+            if (sach == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sách không tồn tại");
+            }
+
             List<ChiTietDonHang> chiTietDonHangList = chiTietDonHangRepository.findChiTietDonHangByDonHang(donHang);
-            for(ChiTietDonHang c : chiTietDonHangList){
-                if(c.getSach().getMaSach()== maSach){
+            for (ChiTietDonHang c : chiTietDonHangList) {
+                if (c.getSach().getMaSach() == maSach) {
                     SuDanhGia suDanhGia = suDanhGiaRepository.findByChiTietDonHang(c);
+                    if (suDanhGia == null) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chưa có đánh giá cho sách này");
+                    }
                     SuDanhGia suDanhGiaResponse = new SuDanhGia();
                     suDanhGiaResponse.setMaDanhGia(suDanhGia.getMaDanhGia());
                     suDanhGiaResponse.setTimestamp(suDanhGia.getTimestamp());
                     suDanhGiaResponse.setNhanXet(suDanhGia.getNhanXet());
                     suDanhGiaResponse.setDiemXepHang(suDanhGia.getDiemXepHang());
-                    return ResponseEntity.status(HttpStatus.OK).body(suDanhGiaResponse);
                 }
             }
-        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy chi tiết đơn hàng cho sách này");
+        } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi khi tải đánh giá: " + e.getMessage());
         }
-        return null;
     }
 }

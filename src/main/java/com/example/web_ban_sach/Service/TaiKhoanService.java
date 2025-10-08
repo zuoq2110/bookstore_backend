@@ -6,6 +6,7 @@ import com.example.web_ban_sach.entity.NguoiDung;
 import com.example.web_ban_sach.entity.Quyen;
 import com.example.web_ban_sach.entity.ThongBao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class TaiKhoanService {
 
         //Gửi email cho ng dùng
         guiEmailKichHoat(nguoiDung.getEmail(), nguoiDung.getMaKichHoat());
-        return ResponseEntity.ok("Đăng ký thành công");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ThongBao("Đăng ký thành công, vui lòng kiểm tra email để kích hoạt tài khoản"));
     }
 
     private String taoMaKichHoat() {

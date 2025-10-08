@@ -1,5 +1,6 @@
 package com.example.web_ban_sach.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "sach")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "danhSachSuDanhGia", "danhSachChiTietDonHang", "danhSachSachYeuThich", "danhSachGioHang"})
 public class Sach {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

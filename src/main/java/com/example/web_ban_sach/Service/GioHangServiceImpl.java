@@ -34,6 +34,7 @@ public class GioHangServiceImpl implements GioHangService{
             int idUser = 0;
             // Danh sách item của data vừa truyền
             List<GioHang> GioHangDataList = new ArrayList<>();
+            System.out.println("Received JSON: " + jsonData.toString());
             for (JsonNode jsonDatum : jsonData) {
                 GioHang GioHangData = objectMapper.treeToValue(jsonDatum, GioHang.class);
                 idUser = Integer.parseInt(formatStringByJson(String.valueOf(jsonDatum.get("maNguoiDung"))));

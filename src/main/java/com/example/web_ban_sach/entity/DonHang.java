@@ -1,5 +1,6 @@
 package com.example.web_ban_sach.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,6 +24,21 @@ public class DonHang {
 
     @Column(name = "tinh_trang_don_hang")
     private String tinhTrangDonHang;
+
+    @Column(name = "ma_van_don")
+    private String maVanDon;
+
+    @Column(name = "don_vi_van_chuyen")
+    private String donViVanChuyen;
+
+    @Column(name = "sdt_van_chuyen")
+    private String sdtVanChuyen;
+
+    @Column(name = "link_tracking", columnDefinition = "TEXT")
+    private String linkTracking;
+
+    @Column(name = "thoi_gian_giao_du_kien")
+    private Date thoiGianGiaoDuKien;
 
     @Column(name = "ghi_chu")
     private String ghiChu;
@@ -53,6 +69,7 @@ public class DonHang {
             CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "ma_nguoi_dung", nullable = false)
+    @JsonIgnoreProperties({"danhSachDonHang", "danhSachSuDanhGia", "danhSachSachYeuThich", "danhSachQuyen", "matKhau"})
     private NguoiDung nguoiDung;
 
     @ManyToOne(cascade = {

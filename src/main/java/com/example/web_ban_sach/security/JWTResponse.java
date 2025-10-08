@@ -9,4 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JWTResponse {
     private String jwt;
+    private int id;
+    private String email;
+    private boolean isAdmin;
+    private boolean isSeller;
+    private String tenGianHang;
+    
+    public JWTResponse(String jwt) {
+        this.jwt = jwt;
+    }
 }

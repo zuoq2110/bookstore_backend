@@ -1,11 +1,13 @@
 package com.example.web_ban_sach.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name="chi_tiet_don_hang")
+@JsonIgnoreProperties({"donHang"})
 public class ChiTietDonHang {
 
     @Id

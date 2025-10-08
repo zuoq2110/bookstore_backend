@@ -42,6 +42,13 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, Endpoints.PUBLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.PUT, Endpoints.PUBLIC_PUT_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.DELETE, Endpoints.PUBLIC_DELETE_ENDPOINTS).permitAll()
+                        // Order Tracking endpoints - Đã include trong /don-hang/** ở PUBLIC_GET_ENDPOINTS
+                        // Seller endpoints - Yêu cầu authentication (sẽ check isSeller trong controller)
+                        .requestMatchers(HttpMethod.GET, Endpoints.SELLER_GET_ENDPOINTS).authenticated()
+                        .requestMatchers(HttpMethod.POST, Endpoints.SELLER_POST_ENDPOINTS).authenticated()
+                        .requestMatchers(HttpMethod.PUT, Endpoints.SELLER_PUT_ENDPOINTS).authenticated()
+                        .requestMatchers(HttpMethod.DELETE, Endpoints.SELLER_DELETE_ENDPOINTS).authenticated()
+                        // Admin endpoints
                         .requestMatchers(HttpMethod.GET, Endpoints.ADMIN_GET_ENDPOINTS).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, Endpoints.ADMIN_POST_ENDPOINTS).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, Endpoints.ADMIN_PUT_ENDPOINTS).hasAuthority("ADMIN")

@@ -139,21 +139,50 @@ private UploadImageService uploadImageService;
        try {
            NguoiDung nguoiDungRequest = objectMapper.treeToValue(jsonNode, NguoiDung.class);
            NguoiDung nguoiDung = nguoiDungRepository.findByMaNguoiDung(nguoiDungRequest.getMaNguoiDung());
+           
+           // Kiểm tra người dùng có tồn tại không
+           if (nguoiDung == null) {
+               return ResponseEntity.badRequest().body(new ThongBao("Không tìm thấy người dùng với ID: " + nguoiDungRequest.getMaNguoiDung()));
+           }
 
            nguoiDung.setTen(nguoiDungRequest.getTen());
            nguoiDung.setSoDienThoai(nguoiDungRequest.getSoDienThoai());
            nguoiDung.setHoDem(nguoiDungRequest.getHoDem());
            nguoiDung.setDiaChiGiaoHang(nguoiDungRequest.getDiaChiGiaoHang());
            nguoiDung.setGioiTinh(nguoiDungRequest.getGioiTinh());
-           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-           Instant instant = Instant.from(formatter.parse(formatStringByJson(String.valueOf(jsonNode.get("ngaySinh")))));
-           java.sql.Date ngaySinh = new java.sql.Date(Date.from(instant).getTime());
-           nguoiDung.setNgaySinh(ngaySinh);
+           
+           // Cập nhật ngày sinh
+           if (jsonNode.has("ngaySinh") && !jsonNode.get("ngaySinh").isNull()) {
+               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+               Instant instant = Instant.from(formatter.parse(formatStringByJson(String.valueOf(jsonNode.get("ngaySinh")))));
+               java.sql.Date ngaySinh = new java.sql.Date(Date.from(instant).getTime());
+               nguoiDung.setNgaySinh(ngaySinh);
+           }
+           
+           // === CẬP NHẬT THÔNG TIN CỬA HÀNG ===
+           if (jsonNode.has("tenGianHang")) {
+               nguoiDung.setTenGianHang(nguoiDungRequest.getTenGianHang());
+           }
+           if (jsonNode.has("moTaGianHang")) {
+               nguoiDung.setMoTaGianHang(nguoiDungRequest.getMoTaGianHang());
+           }
+           if (jsonNode.has("diaChiGianHang")) {
+               nguoiDung.setDiaChiGianHang(nguoiDungRequest.getDiaChiGianHang());
+           }
+           if (jsonNode.has("viDoGianHang")) {
+               nguoiDung.setViDoGianHang(nguoiDungRequest.getViDoGianHang());
+           }
+           if (jsonNode.has("kinhDoGianHang")) {
+               nguoiDung.setKinhDoGianHang(nguoiDungRequest.getKinhDoGianHang());
+           }
+           if (jsonNode.has("soDienThoaiGianHang")) {
+               nguoiDung.setSoDienThoaiGianHang(nguoiDungRequest.getSoDienThoaiGianHang());
+           }
 
            nguoiDungRepository.save(nguoiDung);
        }catch (Exception e){
            e.printStackTrace();
-           ResponseEntity.badRequest().build();
+           return ResponseEntity.badRequest().build();
        }
 
         return ResponseEntity.ok().build();
@@ -164,12 +193,18 @@ private UploadImageService uploadImageService;
         try {
             NguoiDung nguoiDungRequest = objectMapper.treeToValue(jsonNode, NguoiDung.class);
             NguoiDung nguoiDung = nguoiDungRepository.findByMaNguoiDung(nguoiDungRequest.getMaNguoiDung());
+            
+            // Kiểm tra người dùng có tồn tại không
+            if (nguoiDung == null) {
+                return ResponseEntity.badRequest().body(new ThongBao("Không tìm thấy người dùng với ID: " + nguoiDungRequest.getMaNguoiDung()));
+            }
+            
             nguoiDung.setAvatar(nguoiDungRequest.getAvatar());
             nguoiDungRepository.save(nguoiDung);
 
         }catch (Exception e){
             e.printStackTrace();
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok().build();
