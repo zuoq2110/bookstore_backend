@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name="nguoi_dung")
-@JsonIgnoreProperties({"danhSachDonHang", "danhSachGioHang", "matKhau"})
+@JsonIgnoreProperties({"danhSachDonHang", "danhSachGioHang"})
 public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,7 @@ public class NguoiDung {
     private String tenDangNhap;
 
     @Column(name="mat_khau")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String matKhau;
 
     @Column(name="gioi_tinh", length = 10)
@@ -78,6 +79,22 @@ public class NguoiDung {
     @Column(name = "so_dien_thoai_gian_hang", length = 15)
     private String soDienThoaiGianHang;
 
+    @Column(name = "oauth_provider", length = 20)
+    private String oauthProvider;  // "google", "apple", null
+
+    @Column(name = "oauth_provider_id")
+    private String oauthProviderId;  // Google sub hoặc Apple user ID
+
+    // === 2FA FIELDS ===
+    @Column(name = "mfa_enabled", nullable = false)
+    private Boolean mfaEnabled = false;
+
+    @Column(name = "mfa_secret", length = 32)
+    private String mfaSecret;
+
+    @Column(name = "backup_codes", columnDefinition = "TEXT")
+    private String backupCodes; // JSON string chứa danh sách backup codes
+
     @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<SuDanhGia> danhSachSuDanhGia;
 
@@ -101,4 +118,38 @@ public class NguoiDung {
 
     @OneToMany(mappedBy = "nguoiDung", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GioHang> danhSachGioHang;
+    
+    // === 2FA HELPER METHODS ===
+    
+    public boolean isMfaEnabled() {
+        return mfaEnabled != null && mfaEnabled;
+    }
+    
+    public void setMfaEnabled(boolean enabled) {
+        this.mfaEnabled = enabled;
+    }
+    
+    public void setMfaEnabled(Boolean enabled) {
+        this.mfaEnabled = enabled;
+    }
+    
+    public Boolean getMfaEnabled() {
+        return mfaEnabled;
+    }
+    
+    public String getMfaSecret() {
+        return mfaSecret;
+    }
+    
+    public void setMfaSecret(String mfaSecret) {
+        this.mfaSecret = mfaSecret;
+    }
+    
+    public String getBackupCodes() {
+        return backupCodes;
+    }
+    
+    public void setBackupCodes(String backupCodes) {
+        this.backupCodes = backupCodes;
+    }
 }

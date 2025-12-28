@@ -9,6 +9,9 @@ import com.example.web_ban_sach.entity.ThongBao;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,6 +51,7 @@ private UploadImageService uploadImageService;
     }
 
     @Override
+    @CacheEvict(value = "nguoidung", key = "#jsonNode.get('maNguoiDung').asInt()")
     public ResponseEntity<?> doiMatKhau(JsonNode jsonNode){
         try {
             int maNguoiDung = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("maNguoiDung"))));
@@ -66,6 +70,7 @@ private UploadImageService uploadImageService;
     }
 
     @Override
+    @CacheEvict(value = "nguoidung", allEntries = true)
     public ResponseEntity<?> save(JsonNode jsonNode, String option) {
         try {
             NguoiDung nguoiDung = objectMapper.treeToValue(jsonNode, NguoiDung.class);
@@ -112,6 +117,7 @@ private UploadImageService uploadImageService;
     }
 
     @Override
+    @CacheEvict(value = "nguoidung", key = "#id")
     public ResponseEntity<?> delete(int id) {
         try {
 
@@ -135,6 +141,7 @@ private UploadImageService uploadImageService;
 
 
     @Override
+    @CacheEvict(value = "nguoidung", key = "#jsonNode.get('maNguoiDung').asInt()")
     public ResponseEntity<?> updateProfile(JsonNode jsonNode) {
        try {
            NguoiDung nguoiDungRequest = objectMapper.treeToValue(jsonNode, NguoiDung.class);
@@ -189,6 +196,7 @@ private UploadImageService uploadImageService;
     }
 
     @Override
+    @CacheEvict(value = "nguoidung", key = "#jsonNode.get('maNguoiDung').asInt()")
     public ResponseEntity<?> changeAvatar(JsonNode jsonNode) {
         try {
             NguoiDung nguoiDungRequest = objectMapper.treeToValue(jsonNode, NguoiDung.class);

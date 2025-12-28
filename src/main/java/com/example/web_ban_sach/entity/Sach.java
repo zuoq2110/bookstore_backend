@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "sach")
 @Data
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "danhSachSuDanhGia", "danhSachChiTietDonHang", "danhSachSachYeuThich", "danhSachGioHang"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "danhSachSuDanhGia", "danhSachChiTietDonHang", "danhSachSachYeuThich", "danhSachGioHang"}, ignoreUnknown = true)
 public class Sach {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
