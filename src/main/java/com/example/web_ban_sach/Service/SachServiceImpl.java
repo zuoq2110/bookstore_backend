@@ -12,6 +12,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +40,7 @@ public class SachServiceImpl implements SachService{
     }
     @Override
     @Transactional
+    @CacheEvict(value = "sach", allEntries = true)
     public ResponseEntity<?> save(JsonNode jsonNode) {
         try{
             Sach sach = objectMapper.treeToValue(jsonNode, Sach.class);
@@ -93,6 +97,7 @@ public class SachServiceImpl implements SachService{
     }
 
     @Override
+    @CacheEvict(value = "sach", allEntries = true)
     public ResponseEntity<?> update(JsonNode jsonNode) {
         try{
             Sach sach = objectMapper.treeToValue(jsonNode, Sach.class);

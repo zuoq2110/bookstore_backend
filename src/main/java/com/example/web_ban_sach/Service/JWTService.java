@@ -9,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,15 @@ import java.util.function.Function;
 public class JWTService {
     @Autowired
     private UserSecurityService userSecurityService;
-    private static final String SECRET = "Duong12345ABCJDFKFO213HANDFKKDLKKKPELAODIIDID12031";
+    
+    @Value("${jwt.secret}")
+    private String SECRET;
+    
+    @Value("${jwt.expiration}")
+    private long ACCESS_TOKEN_VALIDITY;
+    
+    @Value("${jwt.refresh-expiration}")
+    private long REFRESH_TOKEN_VALIDITY;
 
     public String generateToken(String tenDangNhap){
         Map<String, Object> claims = new HashMap<>();
@@ -51,25 +60,36 @@ public class JWTService {
         claims.put("isStaff", isStaff);
         claims.put("isUser", isUser);
         claims.put("enabled", nguoiDung.isDaKichHoat());
-        return createToken(claims, tenDangNhap);
+        return createToken(claims, tenDangNhap, ACCESS_TOKEN_VALIDITY);
+    }
+    
+    public String generateRefreshToken(String tenDangNhap){
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "refresh");
+        return createToken(claims, tenDangNhap, REFRESH_TOKEN_VALIDITY);
     }
 
-    private String createToken(Map<String, Object> claims, String tenDangNhap){
+    private String createToken(Map<String, Object> claims, String tenDangNhap, long validity){
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(tenDangNhap)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+60*60*1000))
+                .setExpiration(new Date(System.currentTimeMillis() + validity))
                 .signWith(SignatureAlgorithm.HS256, getSignedKey())
                 .compact();
+    }
+    
+    public boolean isRefreshToken(String token){
+        Claims claims = extractAllClaims(token);
+        return "refresh".equals(claims.get("type"));
     }
 
     private Key getSignedKey(){
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(keyBytes); // This will work with 512+ bit key
     }
 
-    private Claims extractAllClaims(String token){
+    public Claims extractAllClaims(String token){
         return Jwts.parser().setSigningKey(getSignedKey()).parseClaimsJws(token).getBody();
     }
 

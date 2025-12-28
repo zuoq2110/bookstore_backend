@@ -38,7 +38,14 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(
-                config -> config.requestMatchers(HttpMethod.GET, Endpoints.PUBLIC_GET_ENDPOINTS).permitAll()
+                config -> config
+                        // Add explicit bypass for OTP auth endpoints FIRST
+                        .requestMatchers("/api/auth/**").permitAll()
+                        // Add 2FA endpoints - require authentication
+                        .requestMatchers("/api/2fa/**").authenticated()
+                        // Add specific bypass for chat testing
+                        .requestMatchers("/api/chat/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, Endpoints.PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST, Endpoints.PUBLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.PUT, Endpoints.PUBLIC_PUT_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.DELETE, Endpoints.PUBLIC_DELETE_ENDPOINTS).permitAll()
@@ -53,6 +60,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, Endpoints.ADMIN_POST_ENDPOINTS).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, Endpoints.ADMIN_PUT_ENDPOINTS).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, Endpoints.ADMIN_DELETE_ENDPOINTS).hasAuthority("ADMIN")
+                        // Default rule for all other endpoints
+                        .anyRequest().authenticated()
         );
         http.cors(cors -> {
             cors.configurationSource(request -> {

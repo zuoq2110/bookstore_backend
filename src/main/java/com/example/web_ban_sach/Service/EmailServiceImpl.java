@@ -25,10 +25,16 @@ public class EmailServiceImpl implements EmailService{
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text, true);
-        } catch (MessagingException e){
-            throw new RuntimeException(e);
+            
+            // Send email inside try-catch to handle SMTP errors
+            emailSender.send(message);
+            System.out.println("Email sent successfully to: " + to);
+        } catch (MessagingException e) {
+            System.err.println("MessagingException while sending email to " + to + ": " + e.getMessage());
+            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
+        } catch (Exception e) {
+            System.err.println("Exception while sending email to " + to + ": " + e.getMessage());
+            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
         }
-        emailSender.send(message);
-
     }
 }

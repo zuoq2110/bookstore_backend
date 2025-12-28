@@ -28,11 +28,29 @@ public class JwtFiler extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
-        if(authHeader!=null&& authHeader.startsWith("Bearer ")){
+        
+        if(authHeader != null && authHeader.startsWith("Bearer ")){
             token = authHeader.substring(7);
-            username = jwtService.extractUsername(token);
+            
+            // 🔒 SKIP temp tokens - they should be handled by TempJwtService, not main JWT service
+            if(token.startsWith("TEMP_")){
+                // Don't process temp tokens in main JWT filter
+                filterChain.doFilter(request, response);
+                return;
+            }
+            
+            // Only process main JWT tokens
+            try {
+                username = jwtService.extractUsername(token);
+            } catch (Exception e) {
+                // Token parsing failed - skip authentication
+                System.err.println("Failed to parse JWT token: " + e.getMessage());
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
-        if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
+        
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = userSecurityService.loadUserByUsername(username);
             if (jwtService.validateToken(token, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
@@ -42,6 +60,5 @@ public class JwtFiler extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-
     }
 }

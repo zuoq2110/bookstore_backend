@@ -4,6 +4,8 @@ import com.example.web_ban_sach.Service.SseEmitterService;
 import com.example.web_ban_sach.dao.NotificationRepository;
 import com.example.web_ban_sach.entity.NotificationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +56,15 @@ public class NotificationController {
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) Boolean unreadOnly) {
         
+        Map<String, Object> response = getNotificationsCached(userId, page, size, unreadOnly);
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * Cache data - không cache ResponseEntity
+     */
+    @Cacheable(value = "notifications", key = "#userId + '_' + #page + '_' + #size + '_' + #unreadOnly")
+    public Map<String, Object> getNotificationsCached(int userId, int page, int size, Boolean unreadOnly) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("ngayTao").descending());
         
         Page<NotificationMessage> notifications;
@@ -70,7 +81,7 @@ public class NotificationController {
         response.put("number", notifications.getNumber());
         response.put("size", notifications.getSize());
         
-        return ResponseEntity.ok(response);
+        return response;
     }
     
     /**
@@ -79,8 +90,16 @@ public class NotificationController {
      */
     @GetMapping("/unread-count")
     public ResponseEntity<?> getUnreadCount(@RequestParam int userId) {
-        long count = notificationRepository.countByNguoiNhanAndDaDoc(userId, false);
+        long count = getUnreadCountCached(userId);
         return ResponseEntity.ok(Map.of("count", count));
+    }
+    
+    /**
+     * Cache count value - không cache ResponseEntity
+     */
+    @Cacheable(value = "notifications", key = "'unread_' + #userId")
+    public long getUnreadCountCached(int userId) {
+        return notificationRepository.countByNguoiNhanAndDaDoc(userId, false);
     }
     
     /**
@@ -88,6 +107,7 @@ public class NotificationController {
      * PUT /notifications/{notificationId}/mark-read
      */
     @PutMapping("/{notificationId}/mark-read")
+    @CacheEvict(value = "notifications", allEntries = true)
     public ResponseEntity<?> markAsRead(@PathVariable int notificationId) {
         NotificationMessage NotificationMessage = notificationRepository.findById(notificationId)
             .orElseThrow(() -> new RuntimeException("NotificationMessage không tồn tại"));
@@ -103,6 +123,7 @@ public class NotificationController {
      * PUT /notifications/mark-all-read?userId=1
      */
     @PutMapping("/mark-all-read")
+    @CacheEvict(value = "notifications", allEntries = true)
     public ResponseEntity<?> markAllAsRead(@RequestParam int userId) {
         notificationRepository.markAllAsReadByUser(userId);
         return ResponseEntity.ok(Map.of("success", true));

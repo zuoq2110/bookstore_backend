@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestResource(excerptProjection = NguoiDung.class,path = "nguoi-dung")
 public interface NguoiDungRepository extends JpaRepository<NguoiDung, Integer> {
@@ -18,9 +19,14 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, Integer> {
 
     public NguoiDung findByTenDangNhap(String tenDangNhap);
     public NguoiDung findByEmail(String email);
+    public Optional<NguoiDung> findOptionalByEmail(String email);
+    public NguoiDung findBySoDienThoai(String soDienThoai);
     public NguoiDung findByMaNguoiDung(int maNguoiDung);
     
     // Tìm tất cả admin (users có quyền = 2)
     @Query("SELECT DISTINCT n FROM NguoiDung n JOIN n.danhSachQuyen q WHERE q.maQuyen = :roleId")
     List<NguoiDung> findUsersByRoleId(@Param("roleId") int roleId);
+    
+    // Tìm users có MFA enabled và secret không null (để migration)
+    List<NguoiDung> findByMfaEnabledTrueAndMfaSecretIsNotNull();
 }
