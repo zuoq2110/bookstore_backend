@@ -25,11 +25,21 @@ public class Endpoints {
             // Seller Approval & Notifications
             "/seller-requests/**",
             "/notifications/stream/**",
-            "/notifications/**"
+            "/notifications/**",
+            // Test Cache endpoint
+            "/test-cache/**",
+            // WebSocket and Chat endpoints
+            "/api/websocket/**",
+            "/api/chat/**",
+            "/ws/**",
+            "/ws"
     };
     public static final String[] PUBLIC_POST_ENDPOINTS = {
             "/tai-khoan/dang-ky",
             "/tai-khoan/dang-nhap",
+            "/tai-khoan/verify-2fa",  // 2FA verification endpoint - must be public
+            "/tai-khoan/oauth-login",
+            "/tai-khoan/link-oauth",
             "/gio-hang/them",
             "/don-hang/**",
             "/sach-yeu-thich/**",
@@ -39,8 +49,12 @@ public class Endpoints {
             // Seller Approval
             "/seller-requests/submit",
             "/seller-requests/*/approve",
-            "/seller-requests/*/reject"
-
+            "/seller-requests/*/reject",
+            // WebSocket and Chat endpoints
+            "/api/websocket/**",
+            "/api/chat/**",
+            // OTP Authentication endpoints - must be public
+            "/api/auth/**"
     };
     public static final String[] PUBLIC_PUT_ENDPOINTS = {
             "/gio-hang/**",
@@ -49,13 +63,16 @@ public class Endpoints {
             "/su-danh-gia/**",
             // Notifications
             "/notifications/*/mark-read",
-            "/notifications/mark-all-read"
+            "/notifications/mark-all-read",
+            // WebSocket and Chat endpoints
+            "/api/websocket/**",
+            "/api/chat/**"
 
     };
     public static final String[] PUBLIC_DELETE_ENDPOINTS = {
             "/gio-hang/**",
             "/sach-yeu-thich/**",
-
+            "/test-cache/**"
 
     };
     
