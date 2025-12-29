@@ -1,0 +1,155 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: web_ban_sach_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"   # cho phép không password
+      MYSQL_DATABASE: sach                # tạo DB mặc định
+      MYSQL_USER: duong                    # user bạn muốn tạo
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./Database/book.sql:/docker-entrypoint-initdb.d/book.sql:ro
+    networks:
+      - web_ban_sach_network
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --skip-character-set-client-handshake
+      --explicit_defaults_for_timestamp=1
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: web_ban_sach_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf:/etc/redis/redis.conf
+    networks:
+      - web_ban_sach_network
+    command: redis-server /etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+  # MongoDB for Chat
+  mongodb:
+    image: mongo:7
+    container_name: web_ban_sach_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: bookstore_chat
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb/mongod.conf:/etc/mongod.conf
+    networks:
+      - web_ban_sach_network
+
+  # Spring Boot Application
+  web-ban-sach-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web_ban_sach_app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Database
+      - DB_URL=jdbc:mysql://mysql:3306/sach?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - DB_USERNAME=duong
+      - DB_PASSWORD=123456
+      
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_TIMEOUT=${REDIS_TIMEOUT}
+      
+      # MongoDB
+      - MONGODB_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-password}@mongodb:27017/bookstore_chat?authSource=admin
+      - MONGODB_DATABASE=bookstore_chat
+      
+      # Email Configuration
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      
+      # Cloudinary Configuration
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      
+      # JWT Configuration
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
+      
+      # Chat Encryption
+      - CHAT_ENCRYPTION_KEY=${CHAT_ENCRYPTION_KEY}
+      
+      # Google OAuth
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_ALLOWED_CLIENT_IDS=${GOOGLE_ALLOWED_CLIENT_IDS}
+      
+      # Server URL
+      - SERVER_URL=${SERVER_URL}
+    volumes:
+      - app_logs:/app/logs
+    depends_on:
+      - mysql
+      - redis
+      - mongodb
+    networks:
+      - web_ban_sach_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: web_ban_sach_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - web-ban-sach-app
+    networks:
+      - web_ban_sach_network
+
+# Volumes for persistent data
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  app_logs:
+    driver: local
+
+# Network for services communication
+networks:
+  web_ban_sach_network:
+    driver: bridge
