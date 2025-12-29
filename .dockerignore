@@ -1,0 +1,44 @@
+# Ignore target directory and build artifacts
+target/
+*.jar
+*.war
+*.ear
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore Git
+.git/
+.gitignore
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore temp files
+*.tmp
+*.temp
+
+# Ignore documentation
+*.md
+!README.md
+
+# Ignore test files for Docker build
+src/test/
+
+# Ignore node_modules if any
+node_modules/
+
+# Ignore environment files (keep only .env)
+.env.local
+.env.development
+.env.test
+.env.production
