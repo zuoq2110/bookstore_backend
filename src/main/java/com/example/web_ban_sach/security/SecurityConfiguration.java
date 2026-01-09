@@ -45,6 +45,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/2fa/**").authenticated()
                         // Add specific bypass for chat testing
                         .requestMatchers("/api/chat/**").permitAll()
+                        // Add bypass for test pagination endpoints
+                        .requestMatchers("/test-pagination/**").permitAll()
                         .requestMatchers(HttpMethod.GET, Endpoints.PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST, Endpoints.PUBLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.PUT, Endpoints.PUBLIC_PUT_ENDPOINTS).permitAll()
