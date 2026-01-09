@@ -106,6 +106,8 @@ services:
       
       # Server URL
       - SERVER_URL=${SERVER_URL}
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=DEBUG
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=DEBUG
     volumes:
       - app_logs:/app/logs
     depends_on:
@@ -121,22 +123,6 @@ services:
       retries: 3
       start_period: 60s
 
-  # Nginx Reverse Proxy (Optional)
-  nginx:
-    image: nginx:alpine
-    container_name: web_ban_sach_nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/logs:/var/log/nginx
-      - ./nginx/ssl:/etc/nginx/ssl
-    depends_on:
-      - web-ban-sach-app
-    networks:
-      - web_ban_sach_network
 
 # Volumes for persistent data
 volumes:
