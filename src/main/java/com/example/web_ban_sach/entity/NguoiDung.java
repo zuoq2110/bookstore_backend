@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name="nguoi_dung")
-@JsonIgnoreProperties({"danhSachDonHang", "danhSachGioHang"})
+@JsonIgnoreProperties({"danhSachDonHang", "danhSachGioHang", "danhSachSuDanhGia", "danhSachSachYeuThich"})
 public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

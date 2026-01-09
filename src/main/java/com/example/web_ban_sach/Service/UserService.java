@@ -15,5 +15,7 @@ public interface UserService  {
 
     public ResponseEntity<?> save(JsonNode jsonNode, String option);
     public ResponseEntity<?> delete(int id);
+    
+    public ResponseEntity<?> getAllUsers(int page, int limit);
 
 }

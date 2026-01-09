@@ -30,6 +30,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -216,6 +222,38 @@ private UploadImageService uploadImageService;
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<?> getAllUsers(int page, int limit) {
+        try {
+            // Validate parameters
+            if (page < 1) page = 1;
+            if (limit < 1) limit = 10;
+            if (limit > 100) limit = 100; // Giới hạn tối đa 100 records per page
+            
+            // Convert page từ 1-based sang 0-based cho Spring Data
+            Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.DESC, "maNguoiDung"));
+            
+            // Query với pagination
+            Page<NguoiDung> userPage = nguoiDungRepository.findAll(pageable);
+            
+            // Tạo response với thông tin pagination
+            Map<String, Object> response = new HashMap<>();
+            response.put("users", userPage.getContent());
+            response.put("currentPage", page);
+            response.put("totalPages", userPage.getTotalPages());
+            response.put("totalElements", userPage.getTotalElements());
+            response.put("pageSize", limit);
+            response.put("hasNext", userPage.hasNext());
+            response.put("hasPrevious", userPage.hasPrevious());
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new ThongBao("Lỗi khi lấy danh sách người dùng: " + e.getMessage()));
+        }
     }
 
 

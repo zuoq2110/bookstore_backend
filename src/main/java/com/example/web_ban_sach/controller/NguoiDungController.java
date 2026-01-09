@@ -82,6 +82,22 @@ public class NguoiDungController {
     }
 
     /**
+     * Lấy danh sách người dùng với pagination
+     * GET /nguoi-dung/users?page=1&limit=100
+     */
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        try {
+            return userService.getAllUsers(page, limit);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * Đăng ký seller
      * POST /nguoi-dung/register-seller
      */
