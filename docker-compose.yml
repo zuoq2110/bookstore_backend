@@ -123,6 +123,7 @@ services:
       retries: 3
       start_period: 60s
 
+
 # Volumes for persistent data
 volumes:
   mysql_data:
